@@ -1,15 +1,10 @@
-import "./App.css";
-import { createMaze } from "@/maze/gen";
 import Maze from "@/components/maze";
 
 function App() {
-  const maze = createMaze("123", 10, 10, 0.5, true);
-  console.log(maze);
-
   return (
-    <>
+    <div className="w-full h-dvh flex items-center justify-center">
       <Maze />
-    </>
+    </div>
   );
 }
 
