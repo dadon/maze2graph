@@ -75,3 +75,17 @@ export function getRandomInt(
 ): number {
   return Math.floor(getRandomFloat(min, max, randomFunction));
 }
+
+export const getWidth = (): number => {
+  if (window.innerWidth) {
+    return Math.min(document.documentElement.clientWidth, window.innerWidth);
+  }
+  return document.documentElement.clientWidth;
+};
+
+export const getHeight = (): number => {
+  if (window.innerHeight) {
+    return Math.min(document.documentElement.clientHeight, window.innerHeight);
+  }
+  return document.documentElement.clientHeight;
+};

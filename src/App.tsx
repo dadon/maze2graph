@@ -1,6 +1,6 @@
 import "./App.css";
-import { Button } from "@/components/ui/button";
 import { createMaze } from "@/maze/gen";
+import Maze from "@/components/maze";
 
 function App() {
   const maze = createMaze("123", 10, 10, 0.5, true);
@@ -8,8 +8,7 @@ function App() {
 
   return (
     <>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
-      <Button>Click me</Button>
+      <Maze />
     </>
   );
 }
