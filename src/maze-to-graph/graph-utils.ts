@@ -31,12 +31,16 @@ export const printGraphDump = (graphDump: Record<string, string[]>): void => {
   console.log("Graph Connections:");
   console.log("=================");
 
-  Object.keys(graphDump)
-    .sort()
-    .forEach((key) => {
-      const connections = graphDump[key].sort().join(", ");
-      console.log(`${key} => [${connections}]`);
-    });
+  // Sort keys alphabetically
+  const sortedKeys = Object.keys(graphDump).sort();
+  const sortedGraph: Record<string, string[]> = {};
+
+  // Create a new object with sorted keys
+  sortedKeys.forEach((key) => {
+    sortedGraph[key] = graphDump[key];
+  });
+
+  console.log(JSON.stringify(sortedGraph, null, 2));
 
   console.log("=================");
   console.log(`Total vertices: ${Object.keys(graphDump).length}`);
