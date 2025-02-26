@@ -76,6 +76,7 @@ describe("convert maze grid to graph", () => {
   });
 
   test("should create vertices with proper connections", () => {
+    // test with manually built graph to ensure that the algorithm is correct
     const sampleGraph: any = {
       "0,0": ["1,0"],
       "0,1": ["1,1"],
@@ -150,5 +151,77 @@ describe("convert maze grid to graph", () => {
     expect(shortestWay[6]).toBe("5");
 
     console.log("shortestWay", shortestWay);
+  });
+
+  test("should create vertices with proper connections another graph", () => {
+    // test with another manually built graph to ensure that the algorithm is correct
+    grid = createMaze(
+      "124",
+      width,
+      height,
+      density,
+      loops,
+      dropX - 1,
+      dropY - 1
+    );
+
+    // Convert grid to graph
+    vertices = convertGridToGraph(grid, dropX, dropY);
+
+    const sampleGraph: any = {
+      "0,0": ["0,1"],
+      "0,1": ["1,1", "0,0"],
+      "0,2": ["0,3", "1,2"],
+      "0,3": ["1,3", "0,2", "0,4"],
+      "0,4": ["0,3"],
+      "0,5": ["1,5"],
+      "1,0": ["1,1-faint"],
+      "1,1": ["2,1", "0,1"],
+      "1,1-faint": ["1,2", "1,0"],
+      "1,2": ["0,2", "1,1-faint", "1,3-faint", "2,2"],
+      "1,3": ["2,3", "0,3"],
+      "1,3-faint": ["1,2", "1,4"],
+      "1,4": ["1,3-faint"],
+      "1,5": ["2,5", "0,5"],
+      "2,0": ["2,1"],
+      "2,1": ["2,2", "2,0", "3,1", "1,1"],
+      "2,2": ["2,1", "3,2", "2,3", "1,2"],
+      "2,3": ["2,2", "2,4", "3,3", "1,3"],
+      "2,4": ["2,3"],
+      "2,5": ["3,5", "1,5"],
+      "3,0": ["3,1", "4,0"],
+      "3,1": ["2,1", "3,0", "3,2", "4,1"],
+      "3,2": ["3,1", "3,3-faint", "2,2"],
+      "3,3": ["2,3", "4,3"],
+      "3,3-faint": ["3,2", "3,4"],
+      "3,4": ["3,3-faint", "3,5", "4,4"],
+      "3,5": ["3,4", "2,5"],
+      "4,0": ["3,0"],
+      "4,1": ["3,1"],
+      "4,2": ["4,3"],
+      "4,3": ["3,3", "4,2", "4,4-faint", "5,3"],
+      "4,4": ["3,4", "5,4"],
+      "4,4-faint": ["4,3", "4,5"],
+      "4,5": ["4,4-faint"],
+      "5,0": ["5,1"],
+      "5,1": ["5,2", "5,0"],
+      "5,2": ["5,3", "5,1"],
+      "5,3": ["4,3", "5,2"],
+      "5,4": ["4,4", "5,5"],
+      "5,5": ["5,4"],
+    };
+
+    for (const key in sampleGraph) {
+      const vertex = vertices[key];
+
+      const connections: string[] = sampleGraph[key];
+      expect(vertex).toBeDefined();
+      expect(vertex.nodes.length).toBe(connections.length);
+      const nodeNames = vertex.nodes.map((node) => node.nameOfVertex);
+
+      for (const connection of connections) {
+        expect(nodeNames).toContain(connection);
+      }
+    }
   });
 });
