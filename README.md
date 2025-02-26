@@ -1,50 +1,100 @@
-# React + TypeScript + Vite
+# Maze2Graph - Converting Weave Mazes to Graph Data Structures
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Project Overview
 
-Currently, two official plugins are available:
+Maze2Graph is a project demonstrating how to convert a specialized weave maze representation to a graph data structure suitable for pathfinding algorithms.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## What are Weave Mazes?
 
-## Expanding the ESLint configuration
+Weave mazes are a special type of maze where passages can pass both over and under other passages, creating a 3D-like structure in a 2D representation. This adds complexity to both the maze generation and pathfinding processes.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## The Challenge
 
-- Configure the top-level `parserOptions` property like this:
+This project presents a specific technical challenge:
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+1. The maze generator produces a 2D grid (matrix) where each cell contains encoded information
+2. Each cell value encodes possible movement directions (North, South, East, West)
+3. The "Under" (U) direction is used to indicate passages that go underneath other passages
+4. This complex representation needs to be converted into a standard graph structure for Dijkstra's algorithm
+
+## Key Concepts
+
+### Grid Representation
+
+The maze generator returns a 2D matrix (`grid`) where each cell value is a number encoding:
+
+- North (N = 1)
+- South (S = 2)
+- East (E = 4)
+- West (W = 8)
+- Under (U = 16)
+
+For example, a cell with value 5 (1 + 4) means you can move North and East from that position.
+
+### Faint Passages
+
+Some passages in the maze are "faint" which are special connections in the weave maze. These are encoded in certain grid values:
+
+- Value 19 for horizontal faint passages
+- Value 28 for vertical faint passages
+
+### Graph Structure
+
+The graph structure consists of:
+
+- Vertices (representing maze cells)
+- Edges (representing connections between cells)
+- Each vertex has a unique key based on its coordinates
+- Faint passages have a special marking in their vertex key
+
+## The Task
+
+Implement the `convertGridToGraph` method in `src/maze-to-graph/maze-to-graph.ts`:
+
+```typescript
+/**
+ * Converts a grid-based maze to a graph suitable for Dijkstra's algorithm
+ *
+ * @param grid The grid representation of the maze
+ * @param initialX The starting X coordinate
+ * @param initialY The starting Y coordinate
+ * @returns A record mapping vertex names to Vertex objects
+ */
+export const convertGridToGraph = (
+  grid: number[][],
+  initialX: number,
+  initialY: number
+): Record<string, Vertex> => {
+  // Implementation goes here
+};
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+This method takes:
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+- `grid`: The 2D matrix representation of the maze
+- `initialX` and `initialY`: The starting point for exploring the maze
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+It should return a Record (map) of vertex names to Vertex objects suitable for use with the Dijkstra algorithm implementation.
+
+## Testing Your Implementation
+
+You can test your implementation in two ways:
+
+1. **Run the tests**: `npm run test`
+
+   - This will run the automated tests to verify your implementation
+
+2. **Use the UI**: `npm run dev`
+   - This starts the React application
+   - View the maze visualization
+   - Use the interactive overlay to:
+     - Click on a cell to set start point (A)
+     - Click on another cell to set end point (B)
+     - See the shortest path between them rendered on the maze
+
+## Project Structure
+
+- `src/maze/` - Contains the maze generation logic
+- `src/maze-to-graph/` - Contains the conversion logic and Dijkstra implementation
+- `src/components/` - React components for visualization
+- `src/store/` - State management for the application

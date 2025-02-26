@@ -3,6 +3,19 @@ import Rand from "rand-seed";
 import { getRandomInt, shuffle } from "@/lib/utils";
 import { Tree } from "./tree";
 
+/**
+ * An implementation of a "weave" maze generator. Weave mazes are those
+ * with passages that pass both over and under other passages. The
+ * technique used in this program was described by Robin Houston,
+ * and works by first decorating the blank grid with the over/under
+ * crossings, and then using Kruskal's algorithm to fill out the rest
+ * of the grid. (Kruskal's is very well-suited to this approach, since
+ * it treats the cells as separate sets and joins them together.)
+ *
+ * Please note: this program was oringinally ported from
+ * https://gist.github.com/856138
+ */
+
 export const N = 1,
   S = 2,
   E = 4,
